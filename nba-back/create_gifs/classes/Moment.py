@@ -1,5 +1,5 @@
-from Ball import Ball
-from Player import Player
+from create_gifs.classes.Ball import Ball
+from create_gifs.classes.Player import Player
 
 class Moment:
     """A class for keeping info about the moments"""

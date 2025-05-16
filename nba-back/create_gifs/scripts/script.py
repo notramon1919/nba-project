@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from Game import Game
+from create_gifs.classes.Game import Game
 
 
 def extract_7zip(file_path: Path, target_path: Path, password=None, remove_original=False):

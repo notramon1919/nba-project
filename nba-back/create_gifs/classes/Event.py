@@ -1,6 +1,6 @@
 import os
-from Constant import Constant
-from Moment import Moment
+from create_gifs.classes.Constant import Constant
+from create_gifs.classes.Moment import Moment
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
@@ -106,7 +106,7 @@ class Event:
             ax.add_patch(circle)
         ax.add_patch(ball_circle)
 
-        court = plt.imread("assets/court.png")
+        court = plt.imread("../assets/court.png")
         plt.imshow(court, zorder=0, extent=[Constant.X_MIN, Constant.X_MAX - Constant.DIFF,
                                             Constant.Y_MAX, Constant.Y_MIN])
 

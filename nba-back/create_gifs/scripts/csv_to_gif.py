@@ -28,7 +28,7 @@ def create_animation(df: pd.DataFrame, output_path: str):
     ax.set_aspect('equal', adjustable='box')
     ax.axis('off')
 
-    court = plt.imread('assets/court.png')
+    court = plt.imread('../assets/court.png')
     ax.imshow(
         court,
         zorder=0,
@@ -85,14 +85,14 @@ def create_animation(df: pd.DataFrame, output_path: str):
     plt.close(fig)
     print(f"Animación guardada: {output_path}")
 
-POSESIONES_FOLDER = f"{input('Código de partido: ')}_posesiones"
-OUTPUT_FOLDER = f"{POSESIONES_FOLDER}_gifs"
 
-if not os.path.exists(OUTPUT_FOLDER):
-    os.makedirs(OUTPUT_FOLDER)
-else:
+GAME_NAME = input("Código de partido: ")
+POSESIONES_FOLDER = f"../data/csv_posesiones/{GAME_NAME}"
+OUTPUT_FOLDER = f"../data/gifs_posesiones/{GAME_NAME}"
+
+if os.path.exists(OUTPUT_FOLDER):
     shutil.rmtree(OUTPUT_FOLDER)
-    os.makedirs(OUTPUT_FOLDER)
+os.makedirs(OUTPUT_FOLDER)
 
 for file in os.listdir(POSESIONES_FOLDER):
     file_path = os.path.join(POSESIONES_FOLDER, file)

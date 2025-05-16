@@ -37,7 +37,7 @@ async function execute_submit() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
-  
+
   currentIndex.value += 1
 }
 </script>

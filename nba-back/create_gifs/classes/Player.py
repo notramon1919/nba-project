@@ -1,4 +1,4 @@
-from Team import Team
+from create_gifs.classes.Team import Team
 
 
 class Player:

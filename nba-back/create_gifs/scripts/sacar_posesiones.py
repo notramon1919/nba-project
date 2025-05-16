@@ -6,10 +6,8 @@ from pathlib import Path
 import pandas as pd
 from pandas import DataFrame
 
-from Game import Game
 
-
-def extract_7zip(file_path: Path, target_path: Path, password=None, remove_original=False):
+def extract_7zip(file_path: Path, target_path: Path, password="", remove_original=False):
     if isinstance(password, str):
         password = [password]
     for pwd in password:
@@ -19,14 +17,6 @@ def extract_7zip(file_path: Path, target_path: Path, password=None, remove_origi
             if remove_original:
                 file_path.unlink()
             break
-
-
-def create_folders(game_name, to_create):
-    for folder in to_create:
-        path = f"./{game_name}_{folder}"
-        if os.path.exists(path):
-            shutil.rmtree(path)
-        os.makedirs(path)
 
 
 def dividir_en_posesiones(df_event) -> list[DataFrame]:
@@ -82,7 +72,8 @@ def unir_posesiones(posesiones_folder):
 
             df_merged = pd.concat([df_actual.iloc[:idx], df_siguiente], ignore_index=True)
 
-            merged_filename = os.path.join(posesiones_folder, f"{GAME_NAME.split(".")[3]}-{GAME_NAME.split(".")[5]}_{posesion_counter:04d}.csv")
+            merged_filename = os.path.join(posesiones_folder,
+                                           f"{GAME_NAME.split(".")[3]}-{GAME_NAME.split(".")[5]}_{posesion_counter:04d}.csv")
             df_merged.to_csv(merged_filename, index=False, float_format="%.4f")
 
             os.remove(actual_path)
@@ -97,27 +88,24 @@ def unir_posesiones(posesiones_folder):
     print("Posesiones después:", len(archivos))
     print("CSVs solapados:", csvs_solapados)
 
-def mover_posesiones():
-    for posesion in os.listdir(POSESIONES_FOLDER):
-        os.rename(f"{POSESIONES_FOLDER}/{posesion}", f"../static/{posesion}")
-        os.replace(f"{POSESIONES_FOLDER}/{posesion}", f"../static/{posesion}")
-        shutil.move(f"{POSESIONES_FOLDER}/{posesion}", f"../static/{posesion}")
 
 GAME_NAME = input("Código de partido: ")
-JSON_PATH = None
-POSESIONES_FOLDER = f"./{GAME_NAME}_posesiones"
+POSESIONES_FOLDER = f"../data/csv_posesiones/{GAME_NAME}"
+JSONS_FOLDER = f"../data/jsons/{GAME_NAME}"
 
-create_folders(GAME_NAME, ["posesiones"])
+if os.path.exists(POSESIONES_FOLDER):
+    shutil.rmtree(POSESIONES_FOLDER)
+os.makedirs(POSESIONES_FOLDER)
 
-if os.path.exists(f"./jsons/{GAME_NAME}"):
-    JSON_PATH = f"jsons/{GAME_NAME}/{os.listdir(f'jsons/{GAME_NAME}')[0]}"
+if os.path.exists(JSONS_FOLDER):
+    JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
 else:
-    extract_7zip(Path(f"data/2016.NBA.Raw.SportVU.Game.Logs/{GAME_NAME}.7z"), Path(f"jsons/{GAME_NAME}"),
-                 password="")
-    JSON_PATH = f"jsons/{GAME_NAME}/{os.listdir(f'jsons/{GAME_NAME}')[0]}"
+    extract_7zip(Path(f"../data/2016.NBA.Raw.SportVU.Game.Logs/{GAME_NAME}.7z"), Path(f"{JSONS_FOLDER}"))
+    JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
 
-game = Game(path_to_json=JSON_PATH)
-df_events = game.get_events().to_frame()
+df = pd.read_json(JSON_PATH)
+events = df["events"]
+df_events = events.to_frame()
 df_events = pd.json_normalize(df_events['events'])
 df_events = df_events.reset_index()
 
@@ -186,4 +174,3 @@ for idx, event in df_events.iterrows():
         print(f"Evento {idx} estaba vacío")
 
 unir_posesiones(POSESIONES_FOLDER)
-mover_posesiones()

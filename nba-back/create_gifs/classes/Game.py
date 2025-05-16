@@ -1,7 +1,7 @@
 import pandas as pd
-from Event import Event
-from Team import Team
-from Constant import Constant
+
+from create_gifs.classes.Event import Event
+from create_gifs.classes.Team import Team
 
 
 class Game:
