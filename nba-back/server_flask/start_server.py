@@ -7,7 +7,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route('/gifs', methods=['GET'])
 def get_gif_list():
     gif_folder = 'static/gifs_posesiones'
