@@ -30,6 +30,7 @@ async function execute_submit() {
     gif: gifActual.value,
     valido: valido_novalido.value,
     descripcion: gif_features_text.value,
+    etiquetado_por: "Persona1"
   }
 
   await fetch('http://localhost:5000/submit', {
@@ -61,7 +62,7 @@ async function execute_submit() {
     <!-- Imagen -->
     <v-img
       v-if="gifActual"
-      :src="`http://localhost:5000/static/gifs/${gifActual}`"
+      :src="`http://localhost:5000/static/${gifActual}`"
       width="600"
       max-height="450"
       class="mb-6"

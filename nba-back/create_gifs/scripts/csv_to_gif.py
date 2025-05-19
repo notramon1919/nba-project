@@ -7,7 +7,6 @@ import shutil
 
 
 class Constant:
-    """A class for handling constants"""
     PLAYER_CIRCLE_SIZE = 1.7
     INTERVAL = 40
     DIFF = 6
@@ -20,7 +19,7 @@ class Constant:
 
 
 def create_animation(df: pd.DataFrame, output_path: str):
-    fig, ax = plt.subplots(figsize=(6.0, 3.2))
+    fig, ax = plt.subplots(figsize=(7.85, 4.2))
 
     plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
     ax.set_xlim(Constant.X_MIN, Constant.X_MAX)
@@ -47,6 +46,20 @@ def create_animation(df: pd.DataFrame, output_path: str):
         ax.add_patch(c)
     ax.add_patch(ball_circle)
 
+    annotations = []
+    for i in range(10):
+        label = str(i + 1) if i < 5 else str(i - 4)
+        ann = ax.annotate(
+            label,
+            xy=(0, 0),
+            color='white',
+            ha='center',
+            va='center',
+            fontweight='bold',
+            fontsize=8
+        )
+        annotations.append(ann)
+
     clock_info = ax.annotate(
         '',
         xy=(Constant.X_CENTER, Constant.Y_CENTER),
@@ -62,6 +75,7 @@ def create_animation(df: pd.DataFrame, output_path: str):
             x = row[f'player_{i + 1}_x']
             y = row[f'player_{i + 1}_y']
             circle.center = (x, y)
+            annotations[i].set_position((x, y))
 
         bx = row['ball_x']
         by = row['ball_y']
@@ -88,7 +102,7 @@ def create_animation(df: pd.DataFrame, output_path: str):
 
 GAME_NAME = input("Código de partido: ")
 POSESIONES_FOLDER = f"../data/csv_posesiones/{GAME_NAME}"
-OUTPUT_FOLDER = f"../data/gifs_posesiones/{GAME_NAME}"
+OUTPUT_FOLDER = f"../../server_flask/static/gifs_posesiones/{GAME_NAME}"
 
 if os.path.exists(OUTPUT_FOLDER):
     shutil.rmtree(OUTPUT_FOLDER)
