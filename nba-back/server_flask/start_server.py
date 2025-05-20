@@ -120,7 +120,8 @@ def submit():
     data = request.json
     gif = data.get('gif').split("/")[2]
     valido = data.get('valido')
-    descripcion = data.get('descripcion', '')
+    descripcion = data.get('descripcion')
+    equipo = data.get('equipo')
     etiquetado_por = current_user.id
 
     file_path = 'data.csv'
@@ -129,8 +130,8 @@ def submit():
     with open(file_path, 'a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         if not file_exists or os.path.getsize(file_path) == 0:
-            writer.writerow(["nombre", "es_valido", "descripcion", "etiquetado_por"])
-        writer.writerow([gif, valido, descripcion, etiquetado_por])
+            writer.writerow(["nombre", "es_valido", "descripcion", "equipo", "etiquetado_por"])
+        writer.writerow([gif, valido, descripcion, equipo, etiquetado_por])
 
     # Contar cuantos gifs ha etiquetado
     count = 0
