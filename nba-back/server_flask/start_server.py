@@ -1,32 +1,84 @@
 import csv
 import os
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 from flask_cors import CORS
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+app.secret_key = 'clave_secreta'
 
+# Setup Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+# === User Class ===
+class User(UserMixin):
+    def __init__(self, username):
+        self.id = username
+
+
+# === Cargar usuario desde CSV ===
+def load_users():
+    users = {}
+    with open('usuarios.csv', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            users[row['username']] = row['password']
+    return users
+
+
+USERS = load_users()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id in USERS:
+        return User(user_id)
+    return None
+
+
+# === LOGIN ===
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    if username in USERS and USERS[username] == password:
+        user = User(username)
+        login_user(user)
+        return jsonify({'success': True, 'user': username})
+    return jsonify({'success': False, 'message': 'Credenciales inválidas'}), 401
+
+
+# === LOGOUT ===
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'success': True})
+
+
+# === Ruta protegida de gifs ===
 @app.route('/gifs', methods=['GET'])
+@login_required
 def get_gif_list():
     gif_folder = 'static/gifs_posesiones'
     gif_files = []
 
-    # Leer gifs ya registrados en data.csv
     registered_gifs = set()
-    csv_path = 'data.csv'
-    if os.path.isfile(csv_path):
-        with open(csv_path, newline='', encoding='utf-8') as f:
+    if os.path.isfile('data.csv'):
+        with open('data.csv', newline='', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 registered_gifs.add(row['nombre'])
 
-    # Recorrer gifs
     for root, dirs, files in os.walk(gif_folder):
         for file in files:
             if file.endswith('.gif'):
-                gif_name = file
-                if gif_name not in registered_gifs:
+                if file not in registered_gifs:
                     relative_path = os.path.relpath(os.path.join(root, file), 'static')
                     gif_files.append(relative_path.replace("\\", "/"))
 
@@ -34,28 +86,27 @@ def get_gif_list():
     return jsonify({'gifs': gif_files})
 
 
+# === Ruta protegida para submit ===
 @app.route('/submit', methods=['POST'])
+@login_required
 def submit():
     data = request.json
-    gif = data.get('gif').split("/")[2]  # NOMBRE_GIF: STRING
-    valido = data.get('valido')  # VALIDO_O_NO: BOOLEAN
-    descripcion = data.get('descripcion', '')  # DESCRIPCION: STRING
-    etiquetado_por = data.get('etiquetado_por', '')  # ETIQUETADO_POR: STRING
+    gif = data.get('gif').split("/")[2]
+    valido = data.get('valido')
+    descripcion = data.get('descripcion', '')
+    etiquetado_por = current_user.id
 
     file_path = 'data.csv'
     file_exists = os.path.isfile(file_path)
 
     with open(file_path, 'a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-
-        # Cabecera solo si el archivo no existe o está vacío
         if not file_exists or os.path.getsize(file_path) == 0:
             writer.writerow(["nombre", "es_valido", "descripcion", "etiquetado_por"])
-
         writer.writerow([gif, valido, descripcion, etiquetado_por])
 
     return {'status': 'ok'}
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

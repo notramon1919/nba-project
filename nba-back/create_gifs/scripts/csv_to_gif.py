@@ -56,7 +56,7 @@ def create_animation(df: pd.DataFrame, output_path: str):
             ha='center',
             va='center',
             fontweight='bold',
-            fontsize=8
+            fontsize=16
         )
         annotations.append(ann)
 
