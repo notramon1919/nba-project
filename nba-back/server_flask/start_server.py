@@ -1,6 +1,7 @@
 import csv
 import os
-from flask import Flask, request, jsonify, redirect, url_for
+
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
@@ -25,7 +26,10 @@ def load_users():
     with open('usuarios.csv', newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            users[row['username']] = row['password']
+            users[row['username']] = {
+                'password': row['password'],
+                'etiquetado_completado': row.get('etiquetado_completado', 'false') == 'true'
+            }
     return users
 
 
@@ -46,11 +50,34 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
-    if username in USERS and USERS[username] == password:
+    if username in USERS and USERS[username]['password'] == password:
         user = User(username)
         login_user(user)
-        return jsonify({'success': True, 'user': username})
+        completado = USERS[username].get('etiquetado_completado')
+        if completado:
+            return jsonify({'success': False, 'message': 'Este usuario ya ha etiquetado todos los GIFs'}), 401
+        return jsonify({'success': True, 'user': username, 'etiquetado_completado': completado})
     return jsonify({'success': False, 'message': 'Credenciales inválidas'}), 401
+
+
+def set_completado(username):
+    rows = []
+    with open('usuarios.csv', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row['username'] == username:
+                row['etiquetado_completado'] = 'true'
+            rows.append(row)
+
+    with open('usuarios.csv', 'w', newline='', encoding='utf-8') as f:
+        fieldnames = rows[0].keys() if rows else ['username', 'password', 'etiquetado_completado']
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    # Recarga usuarios global
+    global USERS
+    USERS = load_users()
 
 
 # === LOGOUT ===
@@ -104,6 +131,17 @@ def submit():
         if not file_exists or os.path.getsize(file_path) == 0:
             writer.writerow(["nombre", "es_valido", "descripcion", "etiquetado_por"])
         writer.writerow([gif, valido, descripcion, etiquetado_por])
+
+    # Contar cuantos gifs ha etiquetado
+    count = 0
+    with open(file_path, newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row['etiquetado_por'] == etiquetado_por:
+                count += 1
+
+    if count >= 30:
+        set_completado(etiquetado_por)
 
     return {'status': 'ok'}
 

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import router from '@/router/index.js'
 
 const gifs = ref([])
 const currentIndex = ref(0)
@@ -7,9 +8,7 @@ const gifActual = computed(() => gifs.value[currentIndex.value] || '')
 
 const valido_novalido = ref(null)
 const gif_features_text = ref('')
-const progress = computed(() =>
-  gifs.value.length ? (currentIndex.value / gifs.value.length) * 100 : 0,
-)
+const progress = computed(() => (currentIndex.value / 30) * 100)
 const disabled = computed(() => valido_novalido.value === null)
 
 async function fetchGifs() {
@@ -23,11 +22,11 @@ async function fetchGifs() {
 
 fetchGifs()
 
-function submitWithDelay() {
-  setTimeout(() => {
-    execute_submit()
-  }, 200)
-}
+// function submitWithDelay() {
+//   setTimeout(() => {
+//     execute_submit()
+//   }, 500)
+// }
 
 async function execute_submit() {
   if (!gifActual.value) return
@@ -49,6 +48,11 @@ async function execute_submit() {
   valido_novalido.value = null
   gif_features_text.value = ''
   currentIndex.value += 1
+
+  if (currentIndex.value >= 30) {
+    sessionStorage.setItem('etiquetado_completo', 'true')
+    await router.push('/completado')
+  }
 }
 </script>
 
@@ -95,7 +99,7 @@ async function execute_submit() {
           color="error"
           style="width: 49%"
           base-color="#f5f5f5"
-          @click="submitWithDelay"
+          @click="execute_submit"
         >
           No es Válido
         </v-btn>
