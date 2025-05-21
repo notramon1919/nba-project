@@ -1,22 +1,9 @@
 import os
 import shutil
-import subprocess
-from pathlib import Path
 
 import pandas as pd
+import py7zr
 from pandas import DataFrame
-
-
-def extract_7zip(file_path: Path, target_path: Path, password="", remove_original=False):
-    if isinstance(password, str):
-        password = [password]
-    for pwd in password:
-        cmd = [shutil.which('7z'), 'x', f'-p{pwd}', f'-o{target_path}', file_path]
-        process = subprocess.run(cmd, capture_output=True)
-        if process.returncode == 0:
-            if remove_original:
-                file_path.unlink()
-            break
 
 
 def dividir_en_posesiones(df_event) -> list[DataFrame]:
@@ -98,9 +85,15 @@ if os.path.exists(POSESIONES_FOLDER):
 os.makedirs(POSESIONES_FOLDER)
 
 if os.path.exists(JSONS_FOLDER):
+    shutil.rmtree(JSONS_FOLDER)
+os.makedirs(JSONS_FOLDER)
+
+if len(os.listdir(JSONS_FOLDER)) != 0:
     JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
 else:
-    extract_7zip(Path(f"../data/2016.NBA.Raw.SportVU.Game.Logs/{GAME_NAME}.7z"), Path(f"{JSONS_FOLDER}"))
+    archive = py7zr.SevenZipFile(f"../data/2016.NBA.Raw.SportVU.Game.Logs/{GAME_NAME}.7z", mode='r')
+    archive.extractall(path=f"{JSONS_FOLDER}")
+
     JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
 
 df = pd.read_json(JSON_PATH)
