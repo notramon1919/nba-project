@@ -1,0 +1,6 @@
+flask
+flask-cors
+flask-login
+matplotlib
+pandas~=2.2.3
+pillow
