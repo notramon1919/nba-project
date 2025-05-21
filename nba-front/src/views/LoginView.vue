@@ -36,7 +36,7 @@ async function onSubmit() {
       snackbar_login_completado.value = true
       error_msg.value = ''
       sessionStorage.setItem('user', data.user)
-      await router.push('/etiquetar')
+      await router.push('/form')
     } else {
       snackbar_login_error.value = true
       error_msg.value = data.message || 'Error al iniciar sesión'
@@ -49,7 +49,7 @@ async function onSubmit() {
 
 <template>
   <v-main class="bg-grey-lighten-4 d-flex align-center justify-center" style="min-height: 100vh">
-    <v-card class="px-12 py-12 rounded-xl elevation-4" width="344">
+    <v-card class="px-12 py-12 rounded-xl elevation-4" width="500">
       <v-form v-model="form" @submit.prevent="onSubmit">
         <!-- Username -->
         <v-text-field
@@ -57,6 +57,7 @@ async function onSubmit() {
           :readonly="loading"
           :rules="[required]"
           class="mb-2"
+          variant="outlined"
           label="Username"
         ></v-text-field>
 
@@ -66,6 +67,7 @@ async function onSubmit() {
           :readonly="loading"
           type="password"
           :rules="[required]"
+          variant="outlined"
           label="Password"
           placeholder="Enter your password"
         ></v-text-field>
@@ -84,6 +86,13 @@ async function onSubmit() {
           Iniciar Sesión
         </v-btn>
       </v-form>
+
+      <!-- Imagen Init y UJI -->
+      <v-img
+        style="width: 100%; margin-top: 20px"
+        cover
+        src="src/assets/images/pie-pagina.png"
+      ></v-img>
     </v-card>
   </v-main>
 

@@ -13,7 +13,7 @@ const disabled = computed(() => valido_novalido.value === null)
 const equipo = ref(null)
 
 function equipoAleatorio() {
-  equipo.value = Math.random() < 0.5 ? "rojo" : "azul"
+  equipo.value = Math.random() < 0.5 ? 'rojo' : 'azul'
 }
 
 async function fetchGifs() {
@@ -49,6 +49,7 @@ async function execute_submit() {
   valido_novalido.value = null
   gif_features_text.value = ''
   currentIndex.value += 1
+  equipoAleatorio()
 
   if (currentIndex.value >= 30) {
     sessionStorage.setItem('etiquetado_completo', 'true')
@@ -69,7 +70,10 @@ async function execute_submit() {
 
       <!-- Texto color equipo -->
       <p style="text-align: center; margin-bottom: 40px; font-size: 24px" class="rounded">
-        Si el GIF es válido, describe la jugada del equipo <strong>{{ equipo }}</strong>.
+        Si el GIF es válido, describe la jugada del equipo
+        <strong :class="{ 'equipo-rojo': equipo === 'rojo', 'equipo-azul': equipo === 'azul' }">
+          {{ equipo }}</strong
+        >.
       </p>
 
       <!-- Imagen -->
@@ -139,4 +143,14 @@ async function execute_submit() {
   </v-main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.equipo-rojo {
+  color: red;
+  font-weight: 800;
+}
+
+.equipo-azul {
+  color: blue;
+  font-weight: 800;
+}
+</style>

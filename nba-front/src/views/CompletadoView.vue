@@ -6,7 +6,7 @@ onMounted(() => {
   // Si no está completado, redirigir a login
   const completado = sessionStorage.getItem('etiquetado_completo')
   if (completado !== 'true') {
-    router.push('/login')
+    router.go(-1)
   }
 })
 
