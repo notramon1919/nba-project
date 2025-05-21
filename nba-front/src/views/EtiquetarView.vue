@@ -10,6 +10,11 @@ const valido_novalido = ref(null)
 const gif_features_text = ref('')
 const progress = computed(() => (currentIndex.value / 30) * 100)
 const disabled = computed(() => valido_novalido.value === null)
+const equipo = ref(null)
+
+function equipoAleatorio() {
+  equipo.value = Math.random() < 0.5 ? 'rojo' : 'azul'
+}
 
 async function fetchGifs() {
   const response = await fetch('http://localhost:5000/gifs', {
@@ -20,13 +25,8 @@ async function fetchGifs() {
   gifs.value = data.gifs
 }
 
+equipoAleatorio()
 fetchGifs()
-
-// function submitWithDelay() {
-//   setTimeout(() => {
-//     execute_submit()
-//   }, 500)
-// }
 
 async function execute_submit() {
   if (!gifActual.value) return
@@ -35,6 +35,7 @@ async function execute_submit() {
     gif: gifActual.value,
     valido: valido_novalido.value,
     descripcion: gif_features_text.value,
+    equipo: equipo.value,
     etiquetado_por: 'Persona1',
   }
 
@@ -48,6 +49,7 @@ async function execute_submit() {
   valido_novalido.value = null
   gif_features_text.value = ''
   currentIndex.value += 1
+  equipoAleatorio()
 
   if (currentIndex.value >= 30) {
     sessionStorage.setItem('etiquetado_completo', 'true')
@@ -60,11 +62,19 @@ async function execute_submit() {
   <v-main class="bg-grey-lighten-4 d-flex justify-center align-center">
     <v-card class="px-10 py-10 rounded-xl elevation-4" max-width="700" width="100%">
       <!-- Barra de Progreso -->
-      <v-progress-linear :model-value="progress" height="25" color="#ffc04a" rounded class="mb-8">
+      <v-progress-linear :model-value="progress" height="25" color="#ffc04a" rounded class="mb-4">
         <template v-slot:default="{ value }">
           <strong>{{ Math.round(value) }}%</strong>
         </template>
       </v-progress-linear>
+
+      <!-- Texto color equipo -->
+      <p style="text-align: center; margin-bottom: 40px; font-size: 24px" class="rounded">
+        Si el GIF es válido, describe la jugada del equipo
+        <strong :class="{ 'equipo-rojo': equipo === 'rojo', 'equipo-azul': equipo === 'azul' }">
+          {{ equipo }}</strong
+        >.
+      </p>
 
       <!-- Imagen -->
       <v-img
@@ -133,4 +143,14 @@ async function execute_submit() {
   </v-main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.equipo-rojo {
+  color: red;
+  font-weight: 800;
+}
+
+.equipo-azul {
+  color: blue;
+  font-weight: 800;
+}
+</style>
