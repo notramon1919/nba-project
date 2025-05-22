@@ -7,6 +7,11 @@ onMounted(() => {})
 function empezar() {
   router.push('/etiquetar')
 }
+
+import { ref } from 'vue'
+
+const slider1 = ref(50)
+const slider2 = ref(50)
 </script>
 
 <template>
@@ -14,33 +19,14 @@ function empezar() {
     <v-card class="px-12 py-12 rounded-xl elevation-4 text-center" max-width="800" width="100%">
       <!-- Título -->
       <h1 class="display-1 font-weight-bold mb-4">Primero, unas preguntas.</h1>
-
+      <!-- Primer Slider -->
+      <v-container>
+        <p>Años como jugador:</p>
+        <v-slider v-model="slider1" thumb-label min="0" max="100" step="1"></v-slider>
+        <p>Años como entrenador</p>
+        <v-slider v-model="slider2" thumb-label min="0" max="100" step="1"></v-slider>
+      </v-container>
       <!-- Texto -->
-      <p class="text-subtitle-1 mb-8">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aspernatur
-        consectetur consequuntur delectus ducimus esse fugiat illum in inventore maiores, molestias
-        nemo officiis omnis possimus reiciendis, sed ut vitae!
-
-        <br />
-
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aspernatur
-        consectetur consequuntur delectus ducimus esse fugiat illum in inventore maiores, molestias
-        nemo officiis omnis possimus reiciendis, sed ut vitae!
-
-        <br />
-
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aspernatur
-        consectetur consequuntur delectus ducimus esse fugiat illum in inventore maiores, molestias
-        nemo officiis omnis possimus reiciendis, sed ut vitae!
-
-        <br />
-
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aperiam aspernatur
-        consectetur consequuntur delectus ducimus esse fugiat illum in inventore maiores, molestias
-        nemo officiis omnis possimus reiciendis, sed ut vitae!
-
-        <br />
-      </p>
 
       <!-- Botón Empezar -->
       <v-btn color="#ffc04a" class="text-white px-8" large @click="empezar">
