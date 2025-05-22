@@ -91,7 +91,7 @@ async function onSubmit() {
       <v-img
         style="width: 100%; margin-top: 20px"
         cover
-        src="src/assets/images/pie-pagina.png"
+        src="src/assets/images/pie-pagina-escalado.png"
       ></v-img>
     </v-card>
   </v-main>
