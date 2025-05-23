@@ -1,9 +1,16 @@
 import os
 import shutil
+import codecs
 
 import pandas as pd
 import py7zr
 from pandas import DataFrame
+
+
+def create_custom_folder(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    os.makedirs(path)
 
 
 def dividir_en_posesiones(df_event) -> list[DataFrame]:
@@ -20,6 +27,7 @@ def dividir_en_posesiones(df_event) -> list[DataFrame]:
 
             elif reloj_actual > reloj_anterior:
                 if posesion_actual:
+                    txt.write(f"EVENTO {idx} - POSESIÓN {len(posesiones)}\n")
                     posesiones.append(pd.DataFrame(posesion_actual))
                     posesion_actual = []
 
@@ -27,8 +35,10 @@ def dividir_en_posesiones(df_event) -> list[DataFrame]:
             reloj_anterior = reloj_actual
 
         if posesion_actual:
+            txt.write(f"EVENTO {idx} - POSESIÓN {len(posesiones)}\n")
             posesiones.append(pd.DataFrame(posesion_actual))
     else:
+        txt.write(f"EVENTO {idx} - POSESIÓN {len(posesiones)} - NULO EN CLOCK\n")
         print("Nulos en possession clock")
 
     return posesiones
@@ -79,14 +89,11 @@ def unir_posesiones(posesiones_folder):
 GAME_NAME = input("Código de partido: ")
 POSESIONES_FOLDER = f"../data/csv_posesiones/{GAME_NAME}"
 JSONS_FOLDER = f"../data/jsons/{GAME_NAME}"
+TRACEBACK_FOLDER = f"../data/tracebacks/{GAME_NAME}"
 
-if os.path.exists(POSESIONES_FOLDER):
-    shutil.rmtree(POSESIONES_FOLDER)
-os.makedirs(POSESIONES_FOLDER)
-
-if os.path.exists(JSONS_FOLDER):
-    shutil.rmtree(JSONS_FOLDER)
-os.makedirs(JSONS_FOLDER)
+create_custom_folder(POSESIONES_FOLDER)
+create_custom_folder(JSONS_FOLDER)
+create_custom_folder(TRACEBACK_FOLDER)
 
 if len(os.listdir(JSONS_FOLDER)) != 0:
     JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
@@ -97,18 +104,20 @@ else:
     JSON_PATH = f"{JSONS_FOLDER}/{os.listdir(f'{JSONS_FOLDER}')[0]}"
 
 df = pd.read_json(JSON_PATH)
-events = df["events"]
-df_events = events.to_frame()
+df_events = df["events"].to_frame()
 df_events = pd.json_normalize(df_events['events'])
 df_events = df_events.reset_index()
 
 posesion_counter = len(os.listdir(POSESIONES_FOLDER))
 game_timers = []
 
+txt = codecs.open(f"{TRACEBACK_FOLDER}/traceback.txt", "a", "utf-8")
+txt.write(f"{GAME_NAME}\n\n")
+
 for idx, event in df_events.iterrows():
     moments = event['moments']
 
-    if len(moments) > 10:
+    if len(moments) != 0:
         rows = []
         for moment in moments:
             try:
@@ -162,8 +171,11 @@ for idx, event in df_events.iterrows():
                         print("La posesión no es lo suficientemente extensa")
                 else:
                     print(f"Posesión duplicada: inicio {inicio}, fin {fin}")
+
         print(f"Evento {idx} terminado ({len(posesiones)} posesiones)")
     else:
+        txt.write(f"EVENTO {idx} - VACÍO\n")
         print(f"Evento {idx} estaba vacío")
+    txt.write("\n")
 
 unir_posesiones(POSESIONES_FOLDER)
