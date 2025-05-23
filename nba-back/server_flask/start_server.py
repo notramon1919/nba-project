@@ -79,6 +79,26 @@ def set_completado(username):
     global USERS
     USERS = load_users()
 
+# === EXPERIENCIA ===
+@app.route('/form', methods=['POST'])
+@login_required
+def form():
+    data = request.json
+    expe1 = data.get('expe1')
+    nivel1 = data.get('nivel1')
+    expe2 = data.get('expe2')
+    nivel2 = data.get('nivel2')
+
+    file_path = 'experiencia.csv'
+    file_exists = os.path.isfile(file_path)
+
+    with open(file_path, 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if not file_exists or os.path.getsize(file_path) == 0:
+            writer.writerow(["experiencia-jugador", "nivel-jugador", "experiencia-entrenador", "nivel-entrenador"])
+        writer.writerow([expe1, nivel1, expe2, nivel2])
+
+    return {'status': 'ok'}
 
 # === LOGOUT ===
 @app.route('/logout', methods=['POST'])
