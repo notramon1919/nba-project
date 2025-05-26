@@ -16,6 +16,7 @@ async function submit() {
     nivel1: nivel1.value,
     expe2: expe2.value,
     nivel2: nivel2.value,
+    username: sessionStorage.getItem('user'),
   }
 
   await fetch('http://localhost:5000/form', {
@@ -30,7 +31,7 @@ async function submit() {
 </script>
 
 <template>
-  <v-main class="bg-grey-lighten-4 d-flex justify-center align-center" style="height: 100vh">
+  <v-main class="bg-grey-lighten-4 d-flex justify-center align-center">
     <v-card class="px-12 py-12 rounded-xl elevation-4 text-center" max-width="800" width="100%">
       <v-form>
         <!-- Título -->
@@ -44,11 +45,10 @@ async function submit() {
           <v-row>
             <v-col class="py1" cols="12">
               <v-btn-toggle v-model="nivel1" multiple>
-                <v-btn variant="tonal" color="#ffc04a">Local</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Autonómico</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Nacional</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Internacional</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Mundial</v-btn>
+                <v-btn value="local" variant="tonal" color="#ffc04a">Local</v-btn>
+                <v-btn value="autonomico" variant="tonal" color="#ffc04a">Autonómico</v-btn>
+                <v-btn value="nacional" variant="tonal" color="#ffc04a">Nacional</v-btn>
+                <v-btn value="internacional" variant="tonal" color="#ffc04a">Internacional</v-btn>
               </v-btn-toggle>
             </v-col>
           </v-row>
@@ -63,11 +63,10 @@ async function submit() {
           <v-row>
             <v-col class="py2" cols="12">
               <v-btn-toggle v-model="nivel2" multiple>
-                <v-btn variant="tonal" color="#ffc04a">Local</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Autonómico</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Nacional</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Internacional</v-btn>
-                <v-btn variant="tonal" color="#ffc04a">Mundial</v-btn>
+                <v-btn value="local" variant="tonal" color="#ffc04a">Local</v-btn>
+                <v-btn value="autonomico" variant="tonal" color="#ffc04a">Autonómico</v-btn>
+                <v-btn value="nacional" variant="tonal" color="#ffc04a">Nacional</v-btn>
+                <v-btn value="internacional" variant="tonal" color="#ffc04a">Internacional</v-btn>
               </v-btn-toggle>
             </v-col>
           </v-row>

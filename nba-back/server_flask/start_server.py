@@ -84,6 +84,7 @@ def set_completado(username):
 @login_required
 def form():
     data = request.json
+    user = data.get('username')
     expe1 = data.get('expe1')
     nivel1 = data.get('nivel1')
     expe2 = data.get('expe2')
@@ -95,8 +96,8 @@ def form():
     with open(file_path, 'a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         if not file_exists or os.path.getsize(file_path) == 0:
-            writer.writerow(["experiencia-jugador", "nivel-jugador", "experiencia-entrenador", "nivel-entrenador"])
-        writer.writerow([expe1, nivel1, expe2, nivel2])
+            writer.writerow(["usuario", "experiencia-jugador", "nivel-jugador", "experiencia-entrenador", "nivel-entrenador"])
+        writer.writerow([user, expe1, nivel1, expe2, nivel2])
 
     return {'status': 'ok'}
 
@@ -142,7 +143,7 @@ def submit():
     valido = data.get('valido')
     descripcion = data.get('descripcion')
     equipo = data.get('equipo')
-    etiquetado_por = current_user.id
+    etiquetado_por = data.get('etiquetado_por')
 
     file_path = 'data.csv'
     file_exists = os.path.isfile(file_path)
@@ -168,4 +169,4 @@ def submit():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
