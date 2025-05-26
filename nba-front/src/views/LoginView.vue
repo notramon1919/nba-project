@@ -48,8 +48,8 @@ async function onSubmit() {
 </script>
 
 <template>
-  <v-main class="bg-grey-lighten-4 d-flex align-center justify-center" style="min-height: 100vh">
-    <v-card class="px-12 py-12 rounded-xl elevation-4" width="500">
+  <v-main class="bg-grey-lighten-4 d-flex align-center justify-center">
+    <v-card class="px-12 py-12 rounded-xl elevation-4" min-width="500px">
       <v-form v-model="form" @submit.prevent="onSubmit">
         <!-- Username -->
         <v-text-field
@@ -86,13 +86,6 @@ async function onSubmit() {
           Iniciar Sesión
         </v-btn>
       </v-form>
-
-      <!-- Imagen Init y UJI -->
-      <v-img
-        style="width: 100%; margin-top: 20px"
-        cover
-        src="src/assets/images/pie-pagina-escalado.png"
-      ></v-img>
     </v-card>
   </v-main>
 

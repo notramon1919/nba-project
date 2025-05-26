@@ -1,1 +1,1 @@
-Proyecto NBA. Ramon Martí 
+Proyecto NBA. Ramon Martí y Alberto Martí

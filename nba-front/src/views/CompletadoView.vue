@@ -17,7 +17,7 @@ function volver_clicked() {
 </script>
 
 <template>
-  <v-main class="bg-grey-lighten-4 d-flex justify-center align-center" style="height: 100vh">
+  <v-main class="bg-grey-lighten-4 d-flex justify-center align-center">
     <v-card class="px-12 py-12 rounded-xl elevation-4 text-center" max-width="600" width="100%">
       <!-- Icono hecho -->
       <v-icon size="120" color="success" class="mb-6">mdi-check-circle-outline</v-icon>

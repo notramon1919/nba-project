@@ -36,8 +36,7 @@ async function execute_submit() {
     valido: valido_novalido.value,
     descripcion: gif_features_text.value,
     equipo: equipo.value,
-    etiquetado_por: 'Persona1',
-  }
+    etiquetado_por: sessionStorage.getItem('user')  }
 
   await fetch('http://localhost:5000/submit', {
     credentials: 'include',
@@ -70,7 +69,7 @@ async function execute_submit() {
 
       <!-- Texto color equipo -->
       <p style="text-align: center; margin-bottom: 40px; font-size: 24px" class="rounded">
-        Si el GIF es válido, describe la jugada del equipo
+        Si la jugada es válida, describe al equipo
         <strong :class="{ 'equipo-rojo': equipo === 'rojo', 'equipo-azul': equipo === 'azul' }">
           {{ equipo }}</strong
         >.
@@ -145,12 +144,21 @@ async function execute_submit() {
 
 <style scoped>
 .equipo-rojo {
-  color: red;
+  background-color: red;
+  color: white;
   font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-block;
 }
 
 .equipo-azul {
-  color: blue;
+  background-color: blue;
+  color: white;
   font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-block;
 }
+
 </style>
