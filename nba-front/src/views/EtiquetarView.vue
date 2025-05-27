@@ -59,7 +59,7 @@ async function execute_submit() {
 
 <template>
   <v-main class="bg-grey-lighten-4 d-flex justify-center align-center">
-    <v-card class="px-10 py-10 rounded-xl elevation-4" max-width="700" width="100%">
+    <v-card class="px-10 py-10 rounded-xl elevation-4 mt-16" max-width="700" width="100%">
       <!-- Barra de Progreso -->
       <v-progress-linear :model-value="progress" height="25" color="#ffc04a" rounded class="mb-4">
         <template v-slot:default="{ value }">
@@ -68,7 +68,7 @@ async function execute_submit() {
       </v-progress-linear>
 
       <!-- Texto color equipo -->
-      <p style="text-align: center; margin-bottom: 40px; font-size: 24px" class="rounded">
+      <p style="text-align: center; margin-bottom: 10px; font-size: 24px" class="rounded">
         Si la jugada es válida, describe al equipo
         <strong :class="{ 'equipo-rojo': equipo === 'rojo', 'equipo-azul': equipo === 'azul' }">
           {{ equipo }}</strong
@@ -79,9 +79,9 @@ async function execute_submit() {
       <v-img
         v-if="gifActual"
         :src="`http://localhost:5000/static/${gifActual}`"
-        max-height="400"
+        max-height="300"
         aspect-ratio="16/9"
-        class="rounded mb-8"
+        class="rounded mb-2"
       />
 
       <!-- Botones Válido / No Válido -->
@@ -120,10 +120,9 @@ async function execute_submit() {
         label="Descripción del GIF"
         counter
         maxlength="250"
-        rows="4"
+        rows="3"
         variant="outlined"
         :disabled="disabled"
-        class="mb-6"
       />
 
       <!-- Confirmar -->
