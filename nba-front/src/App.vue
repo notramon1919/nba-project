@@ -1,5 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import piePagina from '@/assets/images/pie-pagina-escalado.png'
 </script>
 
 <template>
@@ -22,7 +23,7 @@ import { RouterView } from 'vue-router'
         <v-img
           class="mx-auto"
           style="width: 400px"
-          src="src/assets/images/pie-pagina-escalado.png"
+          :src="piePagina"
         />
       </v-container>
     </v-footer>

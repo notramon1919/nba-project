@@ -102,7 +102,7 @@ def create_animation(df: pd.DataFrame, output_path: str):
 
 GAME_NAME = input("Código de partido: ")
 POSESIONES_FOLDER = f"../data/csv_posesiones/{GAME_NAME}"
-OUTPUT_FOLDER = f"../../server_flask/static/gifs_posesiones/{GAME_NAME}"
+OUTPUT_FOLDER = f"../../server_flask/gifs_posesiones/{GAME_NAME}"
 
 if os.path.exists(OUTPUT_FOLDER):
     shutil.rmtree(OUTPUT_FOLDER)

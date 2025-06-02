@@ -1,0 +1,63 @@
+# === Node.js / Vite / Vue ===
+node_modules/
+dist/
+.vite/
+.env
+.env.local
+.env.*.local
+
+nba_back/data
+nba_back/create_gifs/data
+nba_back/server_flask/gifs_posesiones
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor config
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === Python / Flask ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+.env
+.venv/
+venv/
+instance/
+.env.*
+
+# Flask specific
+*.egg-info/
+*.egg
+*.db
+
+# CSVs u otros archivos sensibles
+# No por el momento
+# Asegurase de que están vacíos antes de surbirlos
+
+# === Sistema / Backups ===
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+*~
+*.backup.*
+*.orig
+
+# === Compilados frontend ===
+nba-front/dist/
+nba-front/.vite/
+
+# === Entorno virtual backend ===
+nba_back/venv/
+nba_back/.venv/
+nba_back/__pycache__/

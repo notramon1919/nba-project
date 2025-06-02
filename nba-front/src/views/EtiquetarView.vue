@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import router from '@/router/index.js'
 
+const imagenCargando = ref(true)
 const gifs = ref([])
 const currentIndex = ref(0)
 const gifActual = computed(() => gifs.value[currentIndex.value] || '')
@@ -12,16 +13,21 @@ const progress = computed(() => (currentIndex.value / 30) * 100)
 const disabled = computed(() => valido_novalido.value === null)
 const equipo = ref(null)
 
+function handleImageLoad() {
+  imagenCargando.value = false
+}
+
 function equipoAleatorio() {
   equipo.value = Math.random() < 0.5 ? 'rojo' : 'azul'
 }
 
 async function fetchGifs() {
-  const response = await fetch('http://localhost:5000/gifs', {
+  const response = await fetch('/gifs', {
     method: 'GET',
     credentials: 'include',
   })
   const data = await response.json()
+  console.log('GIFs recibidos del backend:', data.gifs)
   gifs.value = data.gifs
 }
 
@@ -38,7 +44,7 @@ async function execute_submit() {
     equipo: equipo.value,
     etiquetado_por: sessionStorage.getItem('user')  }
 
-  await fetch('http://localhost:5000/submit', {
+  await fetch('/submit', {
     credentials: 'include',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -55,6 +61,11 @@ async function execute_submit() {
     await router.push('/completado')
   }
 }
+
+watch(gifActual, () => {
+  imagenCargando.value = true
+})
+
 </script>
 
 <template>
@@ -75,14 +86,27 @@ async function execute_submit() {
         >.
       </p>
 
-      <!-- Imagen -->
-      <v-img
-        v-if="gifActual"
-        :src="`http://localhost:5000/static/${gifActual}`"
-        max-height="300"
-        aspect-ratio="16/9"
-        class="rounded mb-2"
-      />
+      <div style="position: relative; max-height: 300px;" class="mb-2">
+        <div
+          v-if="imagenCargando"
+          class="position-absolute w-100 h-100 d-flex flex-column justify-center align-center"
+          style="background-color: rgba(255, 255, 255, 0.85); z-index: 2;"
+        >
+          <v-progress-circular indeterminate color="#ffc04a" size="64"/>
+          <div class="mt-4 text-subtitle-1 font-weight-medium">Cargando Imagen...</div>
+        </div>
+
+        <!-- Imagen -->
+        <v-img
+          v-if="gifActual"
+          :src="'/' + gifActual"
+          max-height="300"
+          aspect-ratio="16/9"
+          class="rounded mb-2"
+          @load="handleImageLoad"
+          @error="handleImageLoad"
+        />
+      </div>
 
       <!-- Botones Válido / No Válido -->
       <v-btn-toggle

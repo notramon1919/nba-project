@@ -70,7 +70,7 @@ def unir_posesiones(posesiones_folder):
             df_merged = pd.concat([df_actual.iloc[:idx], df_siguiente], ignore_index=True)
 
             merged_filename = os.path.join(posesiones_folder,
-                                           f"{GAME_NAME.split(".")[3]}-{GAME_NAME.split(".")[5]}_{posesion_counter:04d}.csv")
+                                           f"{GAME_NAME.split('.')[3]}-{GAME_NAME.split('.')[5]}_{posesion_counter:04d}.csv")
             df_merged.to_csv(merged_filename, index=False, float_format="%.4f")
 
             os.remove(actual_path)
@@ -164,7 +164,7 @@ for idx, event in df_events.iterrows():
                     game_timers.append(key)
 
                     if len(posesion) > 60:
-                        filename = f"{POSESIONES_FOLDER}/{GAME_NAME.split(".")[3]}-{GAME_NAME.split(".")[5]}_{posesion_counter:04d}.csv"
+                        filename = f"{POSESIONES_FOLDER}/{GAME_NAME.split('.')[3]}-{GAME_NAME.split('.')[5]}_{posesion_counter:04d}.csv"
                         posesion.to_csv(filename, index=False, float_format="%.4f")
                         posesion_counter += 1
                     else:

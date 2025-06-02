@@ -1,7 +1,7 @@
 import csv
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
@@ -12,6 +12,11 @@ app.secret_key = 'clave_secreta'
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# === Landing ===
+@app.route('/')
+def index():
+   return render_template('index.html')
 
 
 # === User Class ===
@@ -113,7 +118,7 @@ def logout():
 @app.route('/gifs', methods=['GET'])
 @login_required
 def get_gif_list():
-    gif_folder = 'static/gifs_posesiones'
+    gif_folder = 'gifs_posesiones'
     gif_files = []
 
     registered_gifs = set()
@@ -166,7 +171,6 @@ def submit():
         set_completado(etiquetado_por)
 
     return {'status': 'ok'}
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

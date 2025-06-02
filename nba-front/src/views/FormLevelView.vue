@@ -19,7 +19,7 @@ async function submit() {
     username: sessionStorage.getItem('user'),
   }
 
-  await fetch('http://localhost:5000/form', {
+  await fetch('/form', {
     credentials: 'include',
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
